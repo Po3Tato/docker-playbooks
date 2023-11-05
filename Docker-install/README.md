@@ -5,7 +5,7 @@ This script will help install any, or all, of Docker-CE, Docker-Compose, NGinX P
 
 1. `wget` the repository
 
-`wget https://github.com/Po3Tato/docker_install`
+`wget https://github.com/Po3Tato/docker_install](https://github.com/Po3Tato/homelab-doc/tree/main/Docker-install`
 
 2. Change the permissions of the .sh file to make it executable with.
 
