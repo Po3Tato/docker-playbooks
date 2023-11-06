@@ -38,10 +38,10 @@
      > This resizes the image to create a 40GB drive for each VM.
 
 6. **Import the Disk:**
-   - Import the disk to the VM ID and specify the storage location such as "local-lvm":
+   - Import the disk to the VM ID and specify the storage location such as "local-lvm" (replace `***` with the created VM ID):
 
      ```bash
-     qm importdisk 999 ubuntu-22.04.qcow2 local-lvm
+     qm importdisk *** ubuntu-22.04.qcow2 local-lvm
      ```
 
 7. **Finalize VM Configuration:**
