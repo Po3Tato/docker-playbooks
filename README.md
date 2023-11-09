@@ -1,2 +1,2 @@
 # homelab-doc
- A collection of tools and codumention I us in my homelab environment.
+ A collection of tools and codumention I use in my homelab environment.
