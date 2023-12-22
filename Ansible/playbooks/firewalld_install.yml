@@ -1,0 +1,10 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Install Firewalld
+    apt:
+      name: firewalld
+      state: latest

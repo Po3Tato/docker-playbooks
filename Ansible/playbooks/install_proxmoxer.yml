@@ -1,0 +1,9 @@
+---
+- hosts: nodes  # Replace with your Proxmox host group
+  become: true  # Elevate privileges for installation
+
+  tasks:
+    - name: Install proxmoxer
+      apt:
+        name: python3-proxmoxer
+        state: latest
