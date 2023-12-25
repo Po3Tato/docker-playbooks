@@ -1,5 +1,7 @@
+# Get info on server
 ---
-- hosts: nodes  # Gather information from all hosts in your inventory
+
+- hosts: all  # Gather information from all hosts in your inventory
   gather_facts: true  # Explicitly collect facts for device information
 
   tasks:

@@ -1,0 +1,21 @@
+# Install apache2 server with php
+---
+
+- hosts: servers
+  become: true
+  tasks:
+
+  - name: Update repo index
+    apt:
+      update_cache: yes
+
+  - name: Install apache2 package
+    apt:
+      name: apache2
+      state: absent # to remove a package change state to absent
+
+  - name: php support for apache2
+    apt:
+      name: libapache2-mod-php
+      state: absent
+      
