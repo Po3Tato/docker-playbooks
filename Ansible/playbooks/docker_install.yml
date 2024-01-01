@@ -42,9 +42,9 @@
       ansible.builtin.group:
         name: docker
         state: present
-    - name: adding ubuntu to docker group
+    - name: Adding ubuntu to docker group
       user:
-        name: ubuntu
+        name: nano
         groups: docker
         append: yes
     - name: Install docker-compose
@@ -56,3 +56,4 @@
       ansible.builtin.file:
         path: /usr/local/bin/docker-compose
         owner: nano
+        group: docker
