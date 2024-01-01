@@ -2,38 +2,57 @@
 ---
 
 - name: Install Docker
-  hosts: all
+  hosts: linux
   become: true
-
   tasks:
-    - name: Install prerequisites
+    - name: Install dependencies
       apt:
-        name: "{{ item }}"
+        name: "{{item}}"
         state: present
+        update_cache: yes
       loop:
+        - apt-transport-https
         - ca-certificates
         - curl
-        - gnupg
-        - lsb-release
-
-    - name: Add Docker GPG key
-      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-      args:
-        executable: /bin/bash
-
-    - name: Add Docker repository
-      shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-      args:
-        executable: /bin/bash
-
-    - name: Update apt packages
-      apt:
-        update_cache: yes
-
-    - name: Install Docker
-      apt:
-        name: 
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
+        - gnupg-agent
+        - software-properties-common
+    - name: Add GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
         state: present
+    - name: Add docker repository to apt
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+    - name: Install docker
+      apt:
+        name: "{{item}}"
+        state: latest
+        update_cache: yes
+      loop:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+    - name: Check docker is active
+      service:
+        name: docker
+        state: started
+        enabled: yes
+    - name: Ensure group "docker" exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: adding ubuntu to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+    - name: Install docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: 'u+x,g+x'
+    - name: Change file ownership and permissions
+      ansible.builtin.file:
+        path: /usr/local/bin/docker-compose
+        owner: nano
