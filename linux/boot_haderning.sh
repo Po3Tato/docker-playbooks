@@ -13,7 +13,7 @@ function print_green_bold {
 # Function to create backups
 function create_backup {
     if [ -e "$1" ]; then
-        cp "$1" "$1_backup_$(date +"%Y%m%d%H%M%S")"
+        sudo cp "$1" "$1_backup_$(date +"%Y%m%d%H%M%S")"
         print_green_bold "Backup created for $1."
     else
         print_red_bold "File $1 not found. Backup not created."
@@ -42,7 +42,7 @@ print_green_bold "Locking the Boot Directory..."
 # Create backup for fstab
 create_backup "/etc/fstab"
 # Open fstab file with nano
-nano /etc/fstab
+sudo nano /etc/fstab
 # Set owner for fstab with sudo
 sudo chown root:root /etc/fstab
 
