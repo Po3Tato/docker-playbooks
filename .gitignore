@@ -9,3 +9,4 @@ Terraform/.terraform/providers/registry.terraform.io/telmate/proxmox/2.9.14/wind
 Terraform/terraform.tfstate.backup
 Ansible/hosts
 linux/inst_test.sh
+Docker Playbooks/Authentik/.env
