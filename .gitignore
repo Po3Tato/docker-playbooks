@@ -1,12 +1,3 @@
 
-*.tfvars
-*.hcl
-*.tfstate
-Terraform/linux-server.tf
-Terraform/.terraform/providers/registry.terraform.io/telmate/proxmox/2.9.14/windows_amd64/LICENSE
-Terraform/.terraform/providers/registry.terraform.io/telmate/proxmox/2.9.14/windows_amd64/README.md
-Terraform/.terraform/providers/registry.terraform.io/telmate/proxmox/2.9.14/windows_amd64/terraform-provider-proxmox_v2.9.14.exe
-Terraform/terraform.tfstate.backup
-Ansible/hosts
-linux/inst_test.sh
 Docker Playbooks/Authentik/.env
+Ansible/hosts
