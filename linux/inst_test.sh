@@ -1,4 +1,3 @@
-#
 function prompt_user() {
     read -p "Do you want to install $1? (Y/n): " choice
     case $choice in
