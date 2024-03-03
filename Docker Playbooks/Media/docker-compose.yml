@@ -1,0 +1,83 @@
+version: "3"
+services:
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 8085:8085 # qbittorrent
+      - 9117:9117 # Jackett
+      - 8989:8989 # Sonarr
+      - 9696:9696 # Prowlarr
+    volumes:
+      - /home/ubuntu/docker/arr-stack:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=<YOUR_PRIVATE_KEY> # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/providers/mullvad.md and https://github.com/qdm12/gluetun/discussions/805#discussioncomment-2026642
+      - WIREGUARD_ADDRESSES=<Wireguard Config File>
+      - TZ=US/Chicago
+      - UPDATER_PERIOD=24h
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent
+    container_name: qbittorrent
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=US/Chicago
+      - WEBUI_PORT=8085
+    volumes:
+      - /home/ubuntu/docker/arr-stack/qbittorrent:/config
+      - /home/ubuntu/docker/arr-stack/qbittorrent/downloads:/downloads
+    depends_on:
+      - gluetun
+    restart: always
+
+  jackett:
+    image: lscr.io/linuxserver/jackett:latest
+    container_name: jackett
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=US/Chicago
+      - AUTO_UPDATE=true
+      - RUN_OPTS=
+    volumes:
+      - /home/ubuntu/docker/arr-stack/jackett/data:/config
+      - /home/ubuntu/docker/arr-stack/jackett/blackhole:/downloads
+    restart: unless-stopped
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=US/Chicago
+    volumes:
+      - /home/ubuntu/docker/arr-stack/sonarr/data:/config
+      - /home/ubuntu/docker/arr-stack/sonarr/tvseries:/tv
+      - /home/ubuntu/docker/arr-stack/sonarr/downloadclient-downloads:/downloads
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=US/Chicago
+    volumes:
+      - /home/ubuntu/docker/arr-stack/prowlarr/data:/config
+    restart: unless-stopped
