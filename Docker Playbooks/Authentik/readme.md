@@ -1,8 +1,9 @@
 ## Read Me
----
 Create a secret environment to store passwords
 ```
 sudo nano .env
 ```
-- Running Authentik as my SSO solution for the few services i run in my home lab.
-- This docker file contains a good base for setting up authentik with `postgresql` and `redis`
+The docker-compose.yml contains a good base for setting up authentik with `postgresql` and `redis`
+
+### Use case
+- Running Authentik as my SSO solution for self hosted services
