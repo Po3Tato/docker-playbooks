@@ -1,3 +1,6 @@
 
 Docker Playbooks/Authentik/.env
 Ansible/hosts
+Ansible/sec.yml
+Ansible/role/system/defaults/main.yml
+Ansible/group_var/var.yml
