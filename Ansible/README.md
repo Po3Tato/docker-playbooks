@@ -20,6 +20,7 @@ The location of your `secrets.yml` matter. If you put it in the global Ansible f
 ansible-playbook run.yml --extra-vars @secrets.yml
 #if secrets.yml is in the root directory
 ```
----
 
-If there are any issue feel free to reach out
+- Create a `host.txt` file. This will contain all the devices you will want ansible to interact with.
+---
+If you are encountering any issues feel free to reach out.
