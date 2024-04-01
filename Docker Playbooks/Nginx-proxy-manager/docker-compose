@@ -1,0 +1,54 @@
+version: '3.8'
+
+secrets:
+  DB_ROOT_PWD:
+    file: .secrets/db_root_pwd.txt
+  MYSQL_PWD:
+    file: .secrets/mysql_pwd.txt
+
+networks:
+  npm_proxy:
+    driver: bridge
+
+services:
+
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '8021:80' # Public HTTP Port:
+      - '443:443' # Public HTTPS Port
+      - '8121:81' # Admin Web Port
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
+      DB_MYSQL_NAME: "npm"
+      DISABLE_IPV6: 'true'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    secrets:
+      - MYSQL_PWD
+    depends_on:
+      - db
+    networks:
+      - npm-nw
+
+  db:
+    image: jc21/mariadb-aria
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD__FILE: /run/secrets/DB_ROOT_PWD
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      MYSQL_PASSWORD__FILE: /run/secrets/MYSQL_PWD
+      MARIADB_AUTO_UPGRADE: '1'
+    volumes:
+      - ./mysql:/var/lib/mysql
+    secrets:
+      - DB_ROOT_PWD
+      - MYSQL_PWD
+    networks:
+      - npm-nw

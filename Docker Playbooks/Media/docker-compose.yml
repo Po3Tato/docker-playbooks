@@ -33,7 +33,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=US/Chicago
+      - TZ=America/Chicago
       - WEBUI_PORT=8085
     volumes:
       - /home/$USER/docker/arr-stack/qbittorrent:/config

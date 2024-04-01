@@ -14,4 +14,4 @@ services:
 networks:
   default:
     name: main-net # network will be created with this name
-    external: true 
+    external: true
