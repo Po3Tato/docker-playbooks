@@ -1,45 +1,55 @@
-#!/bin/bash
-# Color codes
-GREEN='\033[0;32m'
-NC='\033[0m'
+#!/usr/bin/env bash
 
-check_os_version() {
-    # Check if the system is running Ubuntu 22.04
-    os_release=$(lsb_release -r)
-    if [[ "$os_release" == *"22.04"* ]]; then
-        echo -e "${GREEN}System is running Ubuntu 22.04${NC}"
-    else
-        echo "This script is designed to run on Ubuntu systems running 22.04 only."
-        echo "Exiting..."
+set -e
+
+# check for sudo/root
+check_sudo() {
+    if [ "$EUID" -ne 0 ]; then
+        echo "Run as root or with sudo"
         exit 1
     fi
 }
 
+# set up Docker's apt repository
+setup_docker_repo() {
+    echo "Setting up Docker repository..."
+    apt-get update
+    apt-get install -y ca-certificates curl
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    chmod a+r /etc/apt/keyrings/docker.asc
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt-get update
+}
+
+# install Docker packages
 install_docker() {
-    ISACT=$(systemctl is-active docker 2>&1)
+    echo "Installing Docker..."
+    apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+}
 
-    if [[ "$ISACT" != "active" ]]; then
-        echo -e "${GREEN}Installing Docker-CE (Community Edition)...${NC}"
-        sleep 2s
-
-        curl -fsSL https://get.docker.com | sh >> ~/docker-script-install.log 2>&1
-
-        echo -e "${GREEN}Docker-CE version is now:${NC}"
-        DOCKERV=$(docker -v)
-        echo "          "${DOCKERV}
-        sleep 3s
-
-        echo -e "${GREEN}Starting Docker Service${NC}"
-        systemctl start docker >> ~/docker-script-install.log 2>&1
-
-        echo -e "${GREEN}Attempting to add the currently logged-in user to the docker group...${NC}"
-        sleep 2s
-        sudo usermod -aG docker "${USER}" >> ~/docker-script-install.log 2>&1
-        echo -e "${GREEN}You'll need to log out and back in to finalize the addition of your user to the docker group.${NC}"
-        echo ""
-        sleep 3s
+# create docker group and add user
+setup_docker_group() {
+    echo "Do you want to create the docker group and add your user? (Y/n)"
+    read -r response
+    if [[ "$response" =~ ^([yY][eE][sS]|[yY]|)$ ]]; then
+        groupadd -f docker
+        usermod -aG docker "$SUDO_USER"
+        echo "Docker group created and user added. Please log out and back in for changes to take effect."
     else
-        echo -e "${GREEN}Docker is installed and running.${NC}"
-        echo ""
+        echo "Skipping docker group creation and user addition."
     fi
 }
+
+main() {
+    check_sudo
+    setup_docker_repo
+    install_docker
+    setup_docker_group
+    echo "Docker installed successfully!"
+}
+
+main
