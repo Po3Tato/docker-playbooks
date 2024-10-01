@@ -33,22 +33,19 @@ This section covers deploying resources on Microsoft Azure using Terraform.
 - Azure CLI installed and configured
 
 *Detailed instructions for Azure deployment are a work in progress*
-
+## Notes
+--
 ### Security Considerations
-
 - Always use SSH keys for authentication instead of passwords
 - Limit access to your vps by configuring firewall rules
 - Regularly update and patch your vps's operating system
 
-
 ### Troubleshooting
-
 If you encounter issues:
 1. Ensure your Digital Ocean API key is correct and has the necessary permissions
 2. Check that Terraform is properly installed and up to date
 3. Verify your network connection
-
-For more detailed errors, run `terraform apply -debug` for verbose output.
+    For more detailed errors, run `terraform apply -debug` for verbose output.
 
 ### Further Reading
 
