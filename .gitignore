@@ -6,3 +6,6 @@ Ansible/role/system/defaults/main.yml
 Ansible/group_var/var.yml
 Docker Playbooks/Nginx-proxy-manager/.env
 /Docker Playbooks/oof
+Docker Playbooks/Authentik/docker-compose-old.yml
+Docker Playbooks/Gitea/docker-compose.yml
+Docker Playbooks/Gitea/docker-compose.yml
