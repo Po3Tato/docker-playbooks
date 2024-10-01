@@ -21,6 +21,8 @@ This section guides you through deploying a Digital Ocean droplet with Terraform
 
 Terraform will ask again to confirm with a `yes` input and then the droplet will be created. It can take a couple of secs and to check you can run `doctl compute droplet list` to see the droplet
 
+*[Troubleshooting](#troubleshooting)*
+
 ### Azure Resource Deployment
 ---
 This section covers deploying resources on Microsoft Azure using Terraform.
