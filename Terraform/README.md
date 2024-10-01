@@ -34,7 +34,6 @@ This section covers deploying resources on Microsoft Azure using Terraform.
 
 *Detailed instructions for Azure deployment are a work in progress*
 ## Notes
---
 ### Security Considerations
 - Always use SSH keys for authentication instead of passwords
 - Limit access to your vps by configuring firewall rules
