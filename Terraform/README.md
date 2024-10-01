@@ -34,26 +34,12 @@ This section covers deploying resources on Microsoft Azure using Terraform.
 
 *Detailed instructions for Azure deployment are a work in progress*
 
-### Work in Progress
-
-We are continuously working to expand our Terraform configurations to support more cloud providers and resource types. Stay tuned for updates!
-### Customizing Your Droplet
-
-You can customize your droplet by modifying the `main.tf` file. Common customizations include:
-- Changing the droplet size
-- Selecting a different region
-- Adjusting the OS image
-
 ### Security Considerations
 
 - Always use SSH keys for authentication instead of passwords
-- Limit access to your droplet by configuring firewall rules
-- Regularly update and patch your droplet's operating system
+- Limit access to your vps by configuring firewall rules
+- Regularly update and patch your vps's operating system
 
-### Managing Your Resources
-
-- To destroy the created resources, run `terraform destroy`
-- To update your configuration, modify the .tf files and run `terraform apply` again
 
 ### Troubleshooting
 
