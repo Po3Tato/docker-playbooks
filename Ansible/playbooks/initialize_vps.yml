@@ -1,8 +1,0 @@
----
-- hosts: all
-  become: yes
-  
-  roles:
-    - role: role/system
-    - role: geerlingguy.pip
-    - role: geerlingguy.docker

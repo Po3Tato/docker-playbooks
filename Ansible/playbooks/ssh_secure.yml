@@ -1,6 +1,0 @@
----
-- hosts: all
-  become: yes
-
-  tasks:
-    import_tasks: tasks/ssh_harden.yml

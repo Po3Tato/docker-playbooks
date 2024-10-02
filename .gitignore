@@ -9,3 +9,4 @@ Docker Playbooks/Nginx-proxy-manager/.env
 Docker Playbooks/Authentik/docker-compose-old.yml
 Docker Playbooks/Gitea/docker-compose.yml
 Docker Playbooks/Gitea/docker-compose.yml
+/.vscode

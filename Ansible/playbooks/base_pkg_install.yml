@@ -1,0 +1,18 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+  - name: Installing Common packages - deb systems -
+    ansible.builtin.package:
+      name: "{{ base_pkg }}"
+      state: latest
+      update_cache: yes
+    when: ansible_distribution in ['Debian', 'Ubuntu']
+
+  - name: Installing Common packages- rpm systems -
+    ansible.builtin.dnf:
+      name: "{{ base_pkg }}" 
+      state: latest
+      update_cache: yes
+    when: ansible_distribution in ['Rocky', 'Fedora', 'RHEL']
