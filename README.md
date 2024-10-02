@@ -4,29 +4,30 @@ A collection of tools and documentation for managing a homelab environment.
  
 ## Components
 
-### Ansible
+### [Ansible](./Ansible)
 - Infrastructure as Code (IaC) for server configuration
 - Playbooks for common server setup tasks
 - Package installation and SSH hardening
 
-### Docker Playbooks
+### [Docker Playbooks](./Docker%20Playbooks)
 - Docker Compose files for various services
 
-### Proxmox
+### [Docker Playbooks](./Docker%20Playbooks)
 - VM template creation guide for Ubuntu
 
-### Terraform
+### [Terraform](./Terraform)
 - **Digital Ocean**
     - Infrastructure provisioning for DigitalOcean
     - Droplet creation and project resource management
 
-### Windows Server
+### [Windows Server](./WindowsServer)
 - PowerShell scripts for user and group management
 - Active Directory certificate checks
 
-### Linux Scripts
-- Docker install script
-- Ollama Install script
+### [Linux](./linux)
+- Helpful scripts
+    - Docker install script
+    - Ollama Install script
 
 ## Getting Started
 Each directory contains specific instructions and configurations for different aspects of the homelab. Refer to individual README files or script comments for detailed usage instructions.
