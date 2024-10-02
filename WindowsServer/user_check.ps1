@@ -1,20 +1,35 @@
 # Script checks for all users and groups on the server
 # along with AD certs and prints out info
+# Import required modules
 Import-Module ActiveDirectory
 Import-Module PKI
 
-# Get members of the 'Administrators' group on the local computer
-$localAdmins = Get-LocalGroupMember -Group "Administrators" | Select-Object -ExpandProperty Name
-Write-Output "Local Administrators: $localAdmins"
-
-# Get members of 'Domain Admins' group in AD
-$domainAdmins = Get-ADGroupMember -Identity "Domain Admins" | Select-Object -ExpandProperty Name
-Write-Output "Domain Admins: $domainAdmins"
-
-# List AD-related certificates in the local machine store
-$certs = Get-ChildItem -Path cert:\LocalMachine\My\ -Recurse | Where-Object {
-    $_.Subject -like "*CN=*.yourdomain.com" # Replace 'yourdomain.com'
+# Function to get local administrators
+function Get-LocalAdministrators {
+    Write-Output "Local Administrators:"
+    Get-LocalGroupMember -Group "Administrators" | Format-Table Name
 }
-foreach ($cert in $certs) {
-    Write-Output "AD Related Certificate: $($cert.Subject)"
+
+# Function to get domain administrators
+function Get-DomainAdministrators {
+    Write-Output "Domain Admins:"
+    Get-ADGroupMember -Identity "Domain Admins" | Format-Table Name
+}
+
+# Function to get AD-related certificates
+function Get-ADRelatedCertificates {
+    $domain = (Get-ADDomain).Name
+    Write-Output "AD Related Certificates:"
+    Get-ChildItem -Path cert:\LocalMachine\My\ -Recurse | 
+        Where-Object { $_.Subject -like "*CN=*.${domain}" } | 
+        Format-Table Subject, NotAfter, Thumbprint
+}
+
+# Main script
+try {
+    Get-LocalAdministrators
+    Get-DomainAdministrators
+    Get-ADRelatedCertificates
+} catch {
+    Write-Error "An error occurred: $($_.Exception.Message)"
 }

@@ -2,6 +2,7 @@
 
 Terraform is an Infrastructure as Code (IaC) tool that allows you to define and provision cloud infrastructure across various providers. This project includes configurations for multiple cloud platforms.
 
+---
 ### Digital Ocean Droplet Deployment
 ---
 This section guides you through deploying a Digital Ocean droplet with Terraform, streamlining your cloud resource management.
@@ -23,6 +24,7 @@ Terraform will ask again to confirm with a `yes` input and then the droplet will
 
 *[Troubleshooting](#troubleshooting)*
 
+---
 ### Azure Resource Deployment
 ---
 This section covers deploying resources on Microsoft Azure using Terraform.
