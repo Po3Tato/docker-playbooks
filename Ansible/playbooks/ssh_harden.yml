@@ -2,12 +2,14 @@
 - hosts: all
   become: true
   tasks:
+
     - name: Disable SSH password auth
       lineinfile:
         dest: /etc/ssh/sshd_config
-        regexp: "^#PasswordAuthentication yes"
+        regexp: '^#PasswordAuthentication yes'
         line: "PasswordAuthentication no"
       notify: Restart SSH daemon
+      when: ansible_distribution in ['Debian', 'Ubuntu']
 
     - name: Update SSH configuration to be more secure
       ansible.builtin.lineinfile:
@@ -27,8 +29,11 @@
         - regexp: "^#?X11Forwarding"
           line: "X11Forwarding no"
       notify: Restart SSH daemon
+      when: ansible_distribution in ['Debian', 'Ubuntu']
+
   handlers:
     - name: Restart SSH daemon
       ansible.builtin.service:
         name: sshd
         state: restarted
+      when: ansible_distribution in ['Debian', 'Ubuntu']
