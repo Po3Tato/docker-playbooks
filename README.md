@@ -1,2 +1,41 @@
 # homelab-doc
  A collection of tools and codumention I use in my homelab environment.
+A collection of tools and documentation for managing a homelab environment.
+ 
+## Components
+
+### Ansible
+- Infrastructure as Code (IaC) for server configuration
+- Playbooks for common server setup tasks
+- Package installation and SSH hardening
+
+### Docker Playbooks
+- Docker Compose files for various services
+
+### Proxmox
+- VM template creation guide for Ubuntu
+
+### Terraform
+- **Digital Ocean**
+    - Infrastructure provisioning for DigitalOcean
+    - Droplet creation and project resource management
+
+### Windows Server
+- PowerShell scripts for user and group management
+- Active Directory certificate checks
+
+### Linux Scripts
+- Docker install script
+- Ollama Install script
+
+## Getting Started
+Each directory contains specific instructions and configurations for different aspects of the homelab. Refer to individual README files or script comments for detailed usage instructions.
+
+## Prerequisites
+- Basic understanding of server administration
+- Familiarity with IaC tools like Ansible and Terraform
+- Knowledge of containerization with Docker
+- Access to necessary cloud or on-premises infrastructure
+
+## Usage
+Navigate to the specific directory for the tool or service you want to use and follow the instructions provided in the respective README files or script comments.
