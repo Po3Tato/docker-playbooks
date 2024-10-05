@@ -1,51 +1,59 @@
-version: "3"
-
 services:
-  server:
-    image: gitea/gitea:1.21.4
+
+  gitea:
+    image: gitea/gitea:1.22.1
     container_name: gitea
+    network_mode: service:tailnet-gitea
     environment:
       - USER_UID=1000
       - USER_GID=1000
-      - GITEA__database__DB_TYPE=postgres
-      - GITEA__database__HOST=db:5432
-      # Change info, do not leave default
-      - GITEA__database__NAME=gitea
-      - GITEA__database__USER=gitea
-      - GITEA__database__PASSWD=gitea
-    restart: always
+      - GITEA__server__DOMAIN= # # ${GITEA_ROOT_URL}
+      - GITEA__server__ROOT_URL= # FQDN ${GITEA_ROOT_URL}
+      - GITEA__server__HTTP_ADDR=0.0.0.0
+      - GITEA__server__LFS_JWT_SECRET= # ${GITEA_JWT}
+      # - GITEA__ui__DEFAULT_THEME=Soft Era
+      # - GITEA__ui__THEMES=Soft Era
+    env_file:
+      - .env
+    restart: unless-stopped
     volumes:
-      - ./gitea:/data
+      - ./data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    depends_on:
-      - db
-    networks:
-      - proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.gitea-secure.entrypoints=https"
-      - "traefik.http.routers.gitea-secure.rule=Host(`gitea.example.com`)"
-      - "traefik.http.routers.gitea-secure.tls=true"
-      - "traefik.http.routers.gitea-secure.service=gitea@docker"
-      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
-      - "traefik.docker.network=proxy"
-    security_opt:
-      - no-new-privileges:true
 
-  db:
-    image: postgres:14
-    restart: always
+  tailnet-gitea:
+    image: tailscale/tailscale:latest
+    container_name: tailnet-gitea-node
+    hostname: tailnet-gitea-node
     environment:
-      - POSTGRES_USER=gitea
-      - POSTGRES_PASSWORD=gitea
-      - POSTGRES_DB=gitea
+      - TS_AUTHKEY=tskey-auth-kcgHZnCSMF11CNTRL-nXML3iqVSFNaUpARSXozFN4jEWHtkFeG # ${TS_AUTHKEY}
+      - "TS_EXTRA_ARGS=--advertise-tags=tag:repo --reset" # ${TS_ARGS}
+      - TS_SERVE_CONFIG=/config/gitea.json
+      - TS_STATE_DIR=/var/lib/tailscale
+    env_file:
+      - .env
     volumes:
-      - ./postgres:/var/lib/postgresql/data
-    networks:
-      - proxy
+      - ./state:/var/lib/tailscale
+      - ./config:/config
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - net_admin
+      - sys_module
+    restart: unless-stopped
 
-networks:
-  proxy:
-    name: main-net
-    external: true
+  gitea-runner:
+    image: gitea/act_runner:latest
+    #image: ghcr.io/vegarditgitea-act-runner:dind-latest
+    container_name: gitea-runner
+    network_mode: service:tailnet-gitea
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - ./data/actions/data:/data:rw
+      - ./data/actions/cache:/root/.cache
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - GITEA_INSTANCE_URL=${GITEA_ROOT_URL} # ${GITEA_ROOT_URL}
+      - GITEA_RUNNER_REGISTRATION_TOKEN=${GITEA_TOKEN} # ${GITEA_TOKEN}
+    env_file:
+      - .env
