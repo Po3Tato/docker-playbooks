@@ -1,7 +1,6 @@
 # homelab-doc
- A collection of tools and codumention I use in my homelab environment.
-A collection of tools and documentation for managing a homelab environment.
- 
+ A collection of playbooks along with documention of services I use in my homelab environment.
+
 ## Components
 
 ### [Ansible](./Ansible)
