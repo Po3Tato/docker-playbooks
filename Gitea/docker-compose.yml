@@ -1,0 +1,48 @@
+---
+services:
+
+  Gitea:
+    image: gitea/gitea:1.22.6
+    container_name: Gitea
+    restart: unless-stopped
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL} # FQDN HTTPS ${GITEA_ROOT_URL}
+      - GITEA__server__HTTP_ADDR=0.0.0.0
+      - GITEA__server__LFS_JWT_SECRET=${GITEA_JWT}  # ${GITEA_JWT}
+      # - GITEA__ui__DEFAULT_THEME=Soft Era
+      # - GITEA__ui__THEMES=Soft Era
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=${DB_URL}
+      - GITEA__database__NAME=${DB_NAME}
+      - GITEA__database__USER=${DB_USER}
+      - GITEA__database__PASSWD=${DB_PASSWD}
+    ports:
+      - "2224:22" # For SSH
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitea.tls=true"
+      - "traefik.http.routers.gitea.entrypoints=http"
+      - "traefik.http.routers.gitea.rule=Host(`gitea.example.com`)"
+      - "traefik.http.routers.gitea.entrypoints=https"
+      - "traefik.http.routers.gitea-secure.service=gitea"
+      - "traefik.http.routers.gitea.tls.certresolver=cloudflare"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - proxy
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,70 @@
+---
+services:
+
+# Open web ui
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    restart: unless-stopped
+    networks:
+      - proxy
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - 'OLLAMA_BASE_URL=http://<Instance-IP>:11434'
+      - ENABLE_RAG_WEB_SEARCH=True
+      - RAG_WEB_SEARCH_ENGINE=searxng
+      - RAG_WEB_SEARCH_RESULT_COUNT=8
+      - RAG_WEB_SEARCH_CONCURRENT_REQUESTS=14
+      - SEARXNG_QUERY_URL=http://searxng-prod:8080/search?q=<query>
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./open-webui:/app/backend/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat.entrypoints=http"
+      - "traefik.http.routers.chat.rule=Host(`chat.example.com`)"
+      - "traefik.http.middlewares.chat-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.chat.middlewares=chat-https-redirect"
+      - "traefik.http.routers.chat-secure.entrypoints=https"
+      - "traefik.http.routers.chat-secure.rule=Host(`chat.example.com`)"
+      - "traefik.http.routers.chat-secure.tls=true"
+      - "traefik.http.routers.chat-secure.service=chat"
+      - "traefik.http.services.chat.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+# Searxng
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    restart: unless-stopped
+    networks:
+      - proxy
+    ports:
+      - 8280:8080
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ./searxng:/etc/searxng
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.searxng.entrypoints=http"
+      - "traefik.http.routers.searxng.rule=Host(`searxng.example.com`)"
+      - "traefik.http.middlewares.searxng-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.searxng.middlewares=searxng-https-redirect"
+      - "traefik.http.routers.searxng-secure.entrypoints=https"
+      - "traefik.http.routers.searxng-secure.rule=Host(`searxng.example.com`)"
+      - "traefik.http.routers.searxng-secure.tls=true"
+      - "traefik.http.routers.searxng-secure.service=searxng"
+      - "traefik.http.services.searxng.loadbalancer.server.port=8280"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true
