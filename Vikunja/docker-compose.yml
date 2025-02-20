@@ -14,6 +14,8 @@ services:
       - VIKUNJA_SERVICE_JWTSECRET= # a secure random secret -  `openssl rand -base64 32`
     volumes: 
       - ./data/:/app/vikunja/files
+    env_file:
+      - .env
     networks:
       - proxy
     labels:
