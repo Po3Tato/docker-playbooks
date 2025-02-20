@@ -1,0 +1,32 @@
+---
+services:
+  vikunja:
+    image: vikunja/vikunja
+    container_name: vikunja
+    restart: unless-stopped
+    environment:
+      - VIKUNJA_SERVICE_PUBLICURL= # http:// the public url where Vikunja is reachable
+      - VIKUNJA_DATABASE_HOST=${DB_HOST}
+      - VIKUNJA_DATABASE_PASSWORD=${DB_PWD}
+      - VIKUNJA_DATABASE_TYPE=${DB_TYPE}
+      - VIKUNJA_DATABASE_USER=${DB_USR}
+      - VIKUNJA_DATABASE_DATABASE=${DB_NAME}
+      - VIKUNJA_SERVICE_JWTSECRET= # a secure random secret -  `openssl rand -base64 32`
+    volumes: 
+      - ./data/:/app/vikunja/files
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.vikunja.rule=Host(`vikunja.example.com`)"
+      - "traefik.http.routers.vikunja.entrypoints=https"
+      - "traefik.http.routers.vikunja.tls.certResolver=cloudflare"
+
+volumes:
+  data:
+    driver: local
+
+networks:
+  proxy:
+    external: true

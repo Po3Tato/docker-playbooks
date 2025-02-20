@@ -20,6 +20,7 @@ The following playbooks are currently part of the collection:
 * [Beszel](Beszel): Lightweight monitoring service. Both Hub and Agent use very minimal resources. [More info](https://www.beszel.dev/guide/hub-installation)
 * [Striling-PDF](Striling-PDF/): Self-hosted push notification system. [More info](https://docs.stirlingpdf.com/Installation/Docker%20Install)
 * [Vaultwarden](Vaultwarden/): Self-hosted password manager. Can be used with Bitwarden interface [More info](https://github.com/dani-garcia/vaultwarden?tab=readme-ov-file#docker-compose)
+* [Vikunja](Vikunja/): Self-hosted to-do app with gnat chart. [More info](https://vikunja.io/)
 
 ## To-Do List
 
