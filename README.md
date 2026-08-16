@@ -18,9 +18,10 @@ The following playbooks are currently part of the collection:
 * [Uptime-Kuma](Uptime-Kuma/): Self-Hosted monitoring tool with notifications. [More info](https://github.com/louislam/uptime-kuma/blob/master/compose.yaml)
 * [Grafana](Grafana/): An open-source tool for data visualization and monitoring through interactive dashboards.
 * [Beszel](Beszel): Lightweight monitoring service. Both Hub and Agent use very minimal resources. [More info](https://www.beszel.dev/guide/hub-installation)
-* [Striling-PDF](Striling-PDF/): Self-hosted push notification system. [More info](https://docs.stirlingpdf.com/Installation/Docker%20Install)
+* [Striling-PDF](Striling-PDF/): Self-hosted PDF manipulation toolkit. [More info](https://docs.stirlingpdf.com/Installation/Docker%20Install)
 * [Vaultwarden](Vaultwarden/): Self-hosted password manager. Can be used with Bitwarden interface [More info](https://github.com/dani-garcia/vaultwarden?tab=readme-ov-file#docker-compose)
 * [Vikunja](Vikunja/): Self-hosted to-do app with gnat chart. [More info](https://vikunja.io/)
+* [tailscale-lb](tailscale-lb/): Loadbalancer to forward Tailscale TCP traffic, used to set up virtual IPs over a tailnet. [More info](https://github.com/zombiezen/tailscale-lb)
 
 ## To-Do List
 
