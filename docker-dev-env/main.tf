@@ -107,7 +107,8 @@ module "code-server" {
   agent_id  = coder_agent.main.id
   folder    = "/home/coder"
   order     = 1
-  subdomain = false
+  subdomain = true
+  share     = "authenticated"
 }
 
 resource "docker_volume" "home" {
