@@ -19,6 +19,12 @@ variable "supabase_mcp_url" {
   description = "Self-hosted Supabase MCP endpoint consumed by the opencode CLI agent. Set via Template Settings > Variables or --var on first push; not defaulted here to keep the endpoint out of the repo."
 }
 
+variable "opencode_version" {
+  type        = string
+  description = "opencode CLI version to install (e.g. 1.18.18). Pinned so workspace rebuilds don't silently pull a new release; bump via Template Settings > Variables or --var."
+  default     = "1.18.18"
+}
+
 data "coder_workspace" "me" {}
 data "coder_workspace_owner" "me" {}
 data "coder_provisioner" "me" {}
@@ -82,6 +88,7 @@ resource "coder_agent" "main" {
 
   env = {
     SUPABASE_MCP_URL = var.supabase_mcp_url
+    OPENCODE_VERSION = var.opencode_version
   }
 
   metadata {

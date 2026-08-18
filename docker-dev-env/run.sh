@@ -2,7 +2,7 @@
 source /etc/os-release 2>/dev/null || true
 set -eu
 
-curl -fsSL https://opencode.ai/install | bash
+curl -fsSL https://opencode.ai/install | bash -s -- --version "${OPENCODE_VERSION}"
 
 mkdir -p "$HOME/.config/opencode"
 cat > "$HOME/.config/opencode/opencode.jsonc" <<EOF

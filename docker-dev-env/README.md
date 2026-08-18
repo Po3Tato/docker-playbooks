@@ -17,7 +17,8 @@ Coder template that provisions a Docker container as a workspace on this host. U
 
 ## Configuration
 
-`supabase_mcp_url` is a template variable (not a workspace parameter), so it's set once via **Template Settings > Variables** in the Coder GUI (or `--var` on first push) and reused on every subsequent `coder templates push` without re-specifying it.
+- `supabase_mcp_url` is a template variable (not a workspace parameter), so it's set once via **Template Settings > Variables** in the Coder GUI (or `--var` on first push) and reused on every subsequent `coder templates push` without re-specifying it.
+- `opencode_version` pins the opencode CLI version installed in `run.sh` (defaults to `1.18.18`), so workspace rebuilds don't silently pick up a new release. Bump it the same way as `supabase_mcp_url` to upgrade.
 
 ## Prerequisites
 
