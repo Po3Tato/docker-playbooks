@@ -22,7 +22,7 @@ The following playbooks are currently part of the collection:
 * [Vaultwarden](Vaultwarden/): Self-hosted password manager. Can be used with Bitwarden interface [More info](https://github.com/dani-garcia/vaultwarden?tab=readme-ov-file#docker-compose)
 * [Vikunja](Vikunja/): Self-hosted to-do app with gnat chart. [More info](https://vikunja.io/)
 * [tailscale-lb](tailscale-lb/): Loadbalancer to forward Tailscale TCP traffic, used to set up virtual IPs over a tailnet. [More info](https://github.com/zombiezen/tailscale-lb)
-* [docker-dev-env](docker-dev-env/): Coder workspace template provisioning resource-limited, unprivileged Docker containers with code-server and the opencode CLI agent. [More info](https://coder.com/docs)
+* [Coder-templates](Coder-templates/): Coder workspace templates provisioning resource-limited, unprivileged Docker containers with code-server and the opencode CLI agent — [docker-dev-env](Coder-templates/docker-dev-env/) (base) and [docker-dev-mux](Coder-templates/docker-dev-mux/) (adds the mux module for parallel AI agents). [More info](https://coder.com/docs)
 
 ## To-Do List
 

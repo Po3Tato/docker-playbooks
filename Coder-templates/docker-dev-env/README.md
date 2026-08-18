@@ -30,5 +30,5 @@ Coder template that provisions a Docker container as a workspace on this host. U
 From the repo root:
 
 ```bash
-coder templates push docker-dev-env -d docker-dev-env -y
+coder templates push docker-dev-env -d Coder-templates/docker-dev-env -y
 ```
