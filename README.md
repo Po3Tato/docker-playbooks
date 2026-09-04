@@ -1,8 +1,5 @@
-## Getting Started
-
-This repository contains a collection of Docker Compose files for various applications. To get started, simply clone this repository and navigate to the desired playbook folder.
-
-Each playbook has its own `README.md` file with "instructions" on how to use it.
+# homelab-doc
+ A collection of playbooks along with documention of services I use in my homelab environment.
 
 ## Existing Playbooks
 
@@ -22,7 +19,34 @@ The following playbooks are currently part of the collection:
 * [Vaultwarden](Vaultwarden/): Self-hosted password manager. Can be used with Bitwarden interface [More info](https://github.com/dani-garcia/vaultwarden?tab=readme-ov-file#docker-compose)
 * [Vikunja](Vikunja/): Self-hosted to-do app with gnat chart. [More info](https://vikunja.io/)
 * [tailscale-lb](tailscale-lb/): Loadbalancer to forward Tailscale TCP traffic, used to set up virtual IPs over a tailnet. [More info](https://github.com/zombiezen/tailscale-lb)
-* [Coder-templates](Coder-templates/): Coder workspace templates provisioning resource-limited, unprivileged Docker containers.
+* [docker-templates](docker-templates/): Coder workspace templates provisioning resource-limited, unprivileged Docker containers.
+
+## Components
+
+### [Ansible](./Ansible)
+- Infrastructure as Code (IaC) for server configuration
+- Playbooks for common server setup tasks
+- Package installation and SSH hardening
+
+### [Docker Playbooks](./Docker%20Playbooks)
+- Docker Compose files for various services
+
+### [Docker Playbooks](./Docker%20Playbooks)
+- VM template creation guide for Ubuntu
+
+### [Terraform](./Terraform)
+- **Digital Ocean**
+    - Infrastructure provisioning for DigitalOcean
+    - Droplet creation and project resource management
+
+### [Windows Server](./WindowsServer)
+- PowerShell scripts for user and group management
+- Active Directory certificate checks
+
+### [Linux](./linux)
+- Helpful scripts
+    - Docker install script
+    - Ollama Install script
 
 ## To-Do List
 
@@ -30,3 +54,6 @@ Some ideas for future playbooks include:
 
 * Running K8s using incus-OS
 * Creating containerized services for databases
+
+## Getting Started
+Each directory contains specific instructions and configurations for different aspects of the homelab. Refer to individual README files or script comments for detailed usage instructions.
