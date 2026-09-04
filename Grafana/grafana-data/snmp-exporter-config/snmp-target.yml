@@ -1,0 +1,6 @@
+targets:
+  - address: <SNMP Device>  # IP address of the SNMP device
+    module: if_mib
+    version: 2c
+    auth:
+      community: Unifi-Gateway  # Replace with your community string

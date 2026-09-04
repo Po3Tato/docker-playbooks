@@ -1,0 +1,17 @@
+services:
+
+  gitea-runner:
+    image: gitea/act_runner:latest
+    #image: ghcr.io/vegarditgitea-act-runner:dind-latest
+    container_name: demo-runner-1
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - ./data/actions/data:/data:rw
+      - ./data/actions/cache:/root/.cache
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - GITEA_INSTANCE_URL=${GITEA_ROOT_URL} # ${GITEA_ROOT_URL}
+      - GITEA_RUNNER_REGISTRATION_TOKEN=${GITEA_TOKEN} # ${GITEA_TOKEN}
+    env_file:
+      - .env

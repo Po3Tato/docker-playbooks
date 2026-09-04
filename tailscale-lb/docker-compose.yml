@@ -1,0 +1,15 @@
+---
+services:
+  tailscale-lb:
+    image: ghcr.io/zombiezen/tailscale-lb
+    container_name: tailscale-lb
+    restart: unless-stopped
+    volumes:
+      - ./tailscale-lb.ini:/etc/tailscale-lb.ini:ro
+      - ./state:/var/lib/tailscale-lb
+    command: /etc/tailscale-lb.ini # file name can be changed
+    networks:
+      lb-net:
+networks:
+  lb-net:
+    external: true

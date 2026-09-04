@@ -1,0 +1,50 @@
+http:
+  routers:
+    uptime-kuma:
+      entryPoints:
+        - "https"
+      rule: "Host(`uptime.example.com`)"
+      middlewares:
+        - default-headers
+        - https-redirectscheme
+      tls: {}
+      service: uptime-kuma
+
+  services:
+    uptime-kuma:
+      loadBalancer:
+        servers:
+          - url: "http://<ip:host port>"
+        passHostHeader: true
+
+# Middleware
+  middlewares:
+    https-redirectscheme:
+      redirectScheme:
+        scheme: https
+        permanent: true
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    default-whitelist:
+      ipAllowList:
+        sourceRange:
+        - "192.168.0.0/16"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+
+    secured:
+      chain:
+        middlewares:
+        - default-whitelist
+        - default-headers

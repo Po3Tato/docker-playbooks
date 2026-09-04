@@ -1,0 +1,1 @@
+A fancy self-hosted monitoring tool with support for intergrations like Gotify.

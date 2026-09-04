@@ -1,0 +1,45 @@
+---
+services:
+
+  stirling-pdf:
+    container_name: Stirling-PDF-PROD
+    image: stirlingtools/stirling-pdf:latest
+    networks:
+      - proxy
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/v1/info/status | grep -q 'UP' && curl -fL http://localhost:8080/ | grep -q 'Please sign in'"]
+      interval: 5s
+      timeout: 10s
+      retries: 16
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./stirling-data/data:/usr/share/tessdata:rw
+      - ./stirling-data/config:/configs:rw
+      - ./stirling-data/logs:/logs:rw
+    environment:
+      DOCKER_ENABLE_SECURITY: "true"
+      SECURITY_ENABLELOGIN: "true"
+      PUID: 1005
+      PGID: 1005
+      UMASK: "022"
+      SYSTEM_DEFAULTLOCALE: en-US
+      UI_APPNAME: Stirling-PDF
+      UI_HOMEDESCRIPTION: Stirling-PDF
+      UI_APPNAMENAVBAR: Stirling-PDF Latest
+      SYSTEM_MAXFILESIZE: "100"
+      METRICS_ENABLED: "true"
+      SYSTEM_GOOGLEVISIBILITY: "true"
+    restart: on-failure:5
+
+volumes:
+  stirling-data:
+    driver: local
+
+networks:
+  proxy:
+    external: true

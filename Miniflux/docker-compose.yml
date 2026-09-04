@@ -1,0 +1,42 @@
+---
+services:
+  miniflux:
+    image: ${MINIFLUX_IMAGE:-miniflux/miniflux:latest}
+    container_name: miniflux
+    ports:
+      - "8080:8080"
+    networks:
+      - proxy
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_MAX_CONNS=20
+      - DATABASE_MIN_CONNS=1
+      - DATABASE_CONNECTION_LIFETIME=300
+      - RUN_MIGRATIONS=1
+      - CREATE_ADMIN=1
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - BASE_URL=https://miniflux.example.com
+      - CLEANUP_FREQUENCY_HOURS=24
+      - CLEANUP_ARCHIVE_READ_DAYS=60
+      - CLEANUP_ARCHIVE_UNREAD_DAYS=60
+      - CLEANUP_ARCHIVE_BATCH_SIZE=10000
+      - CLEANUP_REMOVE_SESSIONS_DAYS=30
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.minifluxM1.compress=true"
+      - "traefik.http.middlewares.minifluxM2.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.minifluxM2.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.minifluxM2.headers.frameDeny=true"
+      - "traefik.http.middlewares.minifluxM2.headers.referrerPolicy=no-referrer-when-downgrade"
+      - "traefik.http.middlewares.minifluxM2.headers.stsSeconds=31536000"
+      - "traefik.http.routers.miniflux.entryPoints=https"
+      - "traefik.http.routers.miniflux.tls=true"
+      - "traefik.http.routers.miniflux.middlewares=minifluxM1,minifluxM2"
+      - "traefik.http.routers.miniflux.rule=Host(`miniflux.example.com`)"
+      - "traefik.docker.network=proxy"
+
+networks:
+  proxy:
+    external: true

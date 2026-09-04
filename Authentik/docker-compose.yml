@@ -1,0 +1,98 @@
+---
+services:
+  authentik:
+    image: ghcr.io/goauthentik/server:latest
+    container_name: authentik_server
+    restart: unless-stopped
+    command: server
+    networks:
+      - proxy
+    depends_on:
+      - redis
+    volumes:
+      - ./data/media:/media"
+      - ./data/custom-templates:/templates"
+    environment:
+      - AUTHENTIK_POSTGRESQL__HOST=${DB_HOST}
+      - AUTHENTIK_POSTGRESQL__NAME=${DB_NAME}
+      - AUTHENTIK_POSTGRESQL__USER=${DB_USR}
+      - AUTHENTIK_POSTGRESQL__PASSWORD=${DB_PASS}
+      - AUTHENTIK_REDIS__HOST=redis
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
+      - AUTHENTIK_ERROR_REPORTING__ENABLED=${AUTHENTIK_ERROR_REPORTING__ENABLED}
+      - AUTHENTIK_EMAIL__HOST=${AUTHENTIK_EMAIL__HOST}
+      - AUTHENTIK_EMAIL__PORT=${AUTHENTIK_EMAIL__PORT}
+      - AUTHENTIK_EMAIL__USERNAME=${AUTHENTIK_EMAIL__USERNAME}
+      - AUTHENTIK_EMAIL__PASSWORD=${AUTHENTIK_EMAIL__PASSWORD}
+      - AUTHENTIK_EMAIL__USE_TLS=${AUTHENTIK_EMAIL__USE_TLS}
+      - AUTHENTIK_EMAIL__USE_SSL=${AUTHENTIK_EMAIL__USE_SSL}
+      - AUTHENTIK_EMAIL__TIMEOUT=${AUTHENTIK_EMAIL__TIMEOUT}
+      - AUTHENTIK_EMAIL__FROM=${AUTHENTIK_EMAIL__FROM}
+      - AUTHENTIK_LOG_LEVEL=${AUTHENTIK_LOG_LEVEL}
+      - AUTHENTIK_GDPR_COMPLIANCE=true
+    ports:
+      - 9000:9000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authentik.rule=Host(`authentik.$DOMAIN`)"
+      - "traefik.http.routers.authentik.entrypoints=https"
+      - "traefik.http.routers.authentik.tls=true"
+      ## Individual Application forwardAuth regex (catch any subdomain using individual application forwardAuth)
+      - "traefik.http.routers.authentik-outpost.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.$DOMAIN`) && PathPrefix(`/outpost.goauthentik.io/`)"
+      - "traefik.http.routers.authentik-outpost.entrypoints=https"
+      - "traefik.http.routers.authentik-outpost.tls=true"
+      - "traefik.http.routers.authentik.service=authentik"
+      - "traefik.http.services.authentik-svc.loadBalancer.server.port=9000"
+      - "traefik.docker.network=proxy"
+    env_file:
+      - .env
+
+  authentik_worker:
+    image: ghcr.io/goauthentik/server:latest
+    container_name: authentik_worker
+    restart: unless-stopped
+    command: worker
+    networks:
+      - proxy
+    depends_on:
+      - redis
+    volumes:
+      - ./data/media:/media"
+      - ./data/custom-templates:/templates"
+    environment:
+      - AUTHENTIK_POSTGRESQL__HOST=${DB_HOST}
+      - AUTHENTIK_POSTGRESQL__NAME=${DB_NAME}
+      - AUTHENTIK_POSTGRESQL__USER=${DB_USR}
+      - AUTHENTIK_POSTGRESQL__PASSWORD=${DB_PASS}
+      - AUTHENTIK_REDIS__HOST=redis
+      - AUTHENTIK_SECRET_KEY=${AUTHENTIK_SECRET_KEY}
+      - AUTHENTIK_ERROR_REPORTING__ENABLED=${AUTHENTIK_ERROR_REPORTING__ENABLED}
+      - AUTHENTIK_EMAIL__HOST=${AUTHENTIK_EMAIL__HOST}
+      - AUTHENTIK_EMAIL__PORT=${AUTHENTIK_EMAIL__PORT}
+      - AUTHENTIK_EMAIL__USERNAME=${AUTHENTIK_EMAIL__USERNAME}
+      - AUTHENTIK_EMAIL__PASSWORD=${AUTHENTIK_EMAIL__PASSWORD}
+      - AUTHENTIK_EMAIL__USE_TLS=${AUTHENTIK_EMAIL__USE_TLS}
+      - AUTHENTIK_EMAIL__USE_SSL=${AUTHENTIK_EMAIL__USE_SSL}
+      - AUTHENTIK_EMAIL__TIMEOUT=${AUTHENTIK_EMAIL__TIMEOUT}
+      - AUTHENTIK_EMAIL__FROM=${AUTHENTIK_EMAIL__FROM}
+      - AUTHENTIK_LOG_LEVEL=${AUTHENTIK_LOG_LEVEL}
+      - AUTHENTIK_GDPR_COMPLIANCE=true
+    env_file:
+      - .env
+
+  redis:
+    image: redis:alpine
+    container_name: authentik_redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

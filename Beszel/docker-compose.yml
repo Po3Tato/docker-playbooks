@@ -1,0 +1,44 @@
+---
+services:
+  beszel:
+    image: henrygd/beszel:0.9.1
+    container_name: beszel
+    restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - proxy
+    ports:
+      - 8090:8090
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.Beszel.tls=true"
+      - "traefik.http.routers.Beszel.entrypoints=http"
+      - "traefik.http.routers.Beszel.rule=Host(`beszel.example.com`)"
+      - "traefik.http.routers.Beszel.entrypoints=https"
+      - "traefik.http.routers.Beszel-secure.service=Beszel"
+      - "traefik.http.routers.Beszel.tls.certresolver=cloudflare"
+      - "traefik.http.services.Beszel.loadbalancer.server.port=8090"
+      - "traefik.docker.network=proxy"
+    volumes:
+      - ./beszel_data:/beszel_data
+
+  beszel-agent:
+    image: henrygd/beszel-agent:0.9.1
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PORT: 45876
+      # Do not remove quotes around the key
+      KEY: 'UPDATE WITH YOUR PUBLIC KEY (copy from "Add system" dialog)'
+
+volumes:
+  beszel_data:
+      driver: local
+
+networks:
+  proxy:
+    external: true
