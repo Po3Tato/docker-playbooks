@@ -19,7 +19,7 @@ The following playbooks are currently part of the collection:
 * [Vaultwarden](Vaultwarden/): Self-hosted password manager. Can be used with Bitwarden interface [More info](https://github.com/dani-garcia/vaultwarden?tab=readme-ov-file#docker-compose)
 * [Vikunja](Vikunja/): Self-hosted to-do app with gnat chart. [More info](https://vikunja.io/)
 * [tailscale-lb](tailscale-lb/): Loadbalancer to forward Tailscale TCP traffic, used to set up virtual IPs over a tailnet. [More info](https://github.com/zombiezen/tailscale-lb)
-* [docker-templates](docker-templates/): Coder workspace templates provisioning resource-limited, unprivileged Docker containers.
+* [Coder-templates](Coder-templates/): Coder workspace templates provisioning resource-limited, unprivileged Docker containers.
 
 ## Components
 
